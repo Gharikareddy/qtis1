@@ -6,7 +6,7 @@
     private: false # not confidential
   - name: TRAINER
     prompt: Please enter the trainer name
-    private: false # not confidential
+    private: true # not confidential
   - name: DURATION
     prompt: Please enter the duration
     private: false # not confidential
