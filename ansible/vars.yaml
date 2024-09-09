@@ -1,8 +1,8 @@
 - name: variables to print
   hosts: web
   vars:
-    u-name: "harika"
+    u_name: "harika"
   tasks:
   - name: print the information
     ansible.builtin.debug:
-      msg: "Hi,{{u-name}}"
+      msg: "Hi,{{u_name}}"
