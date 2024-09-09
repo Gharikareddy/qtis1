@@ -4,6 +4,7 @@
     u_name: "harika"
   tasks:
   - name: print the information
-    u_name: "bhavana"
+    vars:
+      u_user: "bhavana"
     ansible.builtin.debug:
       msg: "Hi,{{u_name}}"
