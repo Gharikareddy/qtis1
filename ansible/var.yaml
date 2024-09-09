@@ -1,0 +1,10 @@
+- name: variables to print
+  hosts: web
+  vars_files:
+  - vars.yaml
+  tasks:
+  - name: print the information
+    #vars:
+      #u_name: "bhavana"
+    ansible.builtin.debug:
+      msg: "Hi,{{u_name}}"
