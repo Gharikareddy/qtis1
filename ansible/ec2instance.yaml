@@ -9,7 +9,7 @@
     - mysql
     - backend
     - frontend
-    zone: vijaydevops.store #replace your zone
+    zone: harikagade.store #replace your zone
   tasks:
   - name: create ec2 instance
     amazon.aws.ec2_instance:
