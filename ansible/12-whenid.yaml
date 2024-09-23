@@ -3,11 +3,14 @@
   become: yes
   tasks:
   - name: check user exit or not
-    ansible.builtin.command: id root
+    ansible.builtin.command: id expense
     register: USER
     igonre_errors: True
 
   - name: print the user information
     ansible.builtin.debug:
       msg: "user info: {{ USER }}"
-  
+
+  - name: create user
+    ansible.builtin.command: useradd expense
+    when: USER.re !=0 
