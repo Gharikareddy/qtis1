@@ -13,4 +13,4 @@
 
   - name: create user
     ansible.builtin.command: useradd expense
-    when: USER.re != 0 
+    when: USER.rc != 0 
