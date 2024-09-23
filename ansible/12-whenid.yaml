@@ -1,0 +1,13 @@
+- name: create user
+  hosts: web
+  become: yes
+  tasks:
+  - name: check user exit or not
+    ansible.builtin.command: id root
+    register: USER
+    igonre_errors: True
+
+  - name: print the user information
+    ansible.builtin.debug:
+      msg: "user info: {{ USER }}"
+  
