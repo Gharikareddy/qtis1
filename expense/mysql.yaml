@@ -5,15 +5,14 @@
     mysql_password: "ExpenseApp@1"
     mysql_host: "mysql.harikagade.store"
   tasks:
-  - name: install MySQL Server
-    ansible.builtin.package:
-      name: mysql-server
-      state: present
   - name: install python lib PyMySQL
     ansible.builtin.pip:
       name:
       - PyMySQL
-
+  - name: install MySQL Server
+    ansible.builtin.package:
+      name: mysql-server
+      state: present
   - name: start mysql server
     ansible.builtin.service:
       name: mysqld
