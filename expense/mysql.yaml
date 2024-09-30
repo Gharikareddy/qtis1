@@ -1,9 +1,16 @@
+#T1: install mysql server
+#T2: start the mysql service
+#T3: Check if root user is created or not
+#T4: Install dependencies
+#T5: if password for root is not set , create password for root.
+
+
 - name: mysql configuration
   hosts: mysql
   become: yes
   vars:
     mysql_password: "ExpenseApp@1"
-    mysql_host: "mysql.harikagade.store"
+    mysql_host: "mysql.vijaydevops.store"
   tasks:
   - name: install python lib PyMySQL
     ansible.builtin.pip:
@@ -13,6 +20,7 @@
     ansible.builtin.package:
       name: mysql-server
       state: present
+
   - name: start mysql server
     ansible.builtin.service:
       name: mysqld
@@ -28,7 +36,6 @@
   - name: print the mysql_info
     ansible.builtin.debug:
       msg: "{{mysql_info}}"
-- name: install python lib PyMySQL
-  ansible.builtin.pip
-    name:
-    - PyMySQL
+  - name: update my sql root password if it not set
+    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{mysql_password}}"
+    when: mysql_info.failed == true
