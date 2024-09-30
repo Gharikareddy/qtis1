@@ -12,7 +12,7 @@
   become: yes
   vars:
     mysql_password: ExpenseApp@1
-    mysql_host: mysql.vijaydevops.store
+    mysql_host: mysql.harikagade.store
   tasks:
   - name: disable default nodejs
     ansible.builtin.command: dnf module disable nodejs -y
