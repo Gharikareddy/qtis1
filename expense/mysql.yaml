@@ -22,7 +22,7 @@
   - name: print the mysql_info
     ansible.builtin.debug:
       msg: "{{mysql_info}}"
-- name: install python lib PyMySQL
-    ansible.builtin.pip:
-      name:
-      - PyMySQL
+#- name: install python lib PyMySQL
+ #   ansible.builtin.pip:
+  #    name:
+   #   - PyMySQL
