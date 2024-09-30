@@ -1,3 +1,8 @@
+#install nginx
+#donwload the project
+# unzip and store the files in required location
+# execute
+
 - name: Front end
   hosts: frontend
   become: yes #take sudo access
