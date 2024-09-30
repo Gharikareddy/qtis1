@@ -2,47 +2,84 @@
 #donwload the project
 # unzip and store the files in required location
 # execute
+- name: backend server
+  hosts: backend
+  become: yes
+  vars:
+    mysql_password: ExpenseApp@1
+    mysql_host: mysql.harikagade.store
 
-- name: Front end
-  hosts: frontend
-  become: yes #take sudo access
   tasks:
-  - name: install nginx
-    ansible.builtin.package:
-      name: nginx
-      state: present
-  - name: run nginx
-    ansible.builtin.service:
-      name: nginx
-      state: started
-      enabled: yes
-  - name: remove html directory
-    ansible.builtin.file:
-      path: /usr/share/nginx/html
+  - name: Disable default nodejs
+    ansible.builtin.dnf:
+      name: nodejs
       state: absent
+      module_hotfixes: yes
 
-  - name: create html directory
+  - name: Enable nodejs version 20
+    ansible.builtin.dnf:
+      name: nodejs:20
+      state: present
+
+  - name: Install required packages (Node.js and MySQL)
+    ansible.builtin.package:
+      name: 
+        - nodejs
+        - mysql
+      state: present
+
+  - name: Add user 'expense'
+    ansible.builtin.user:
+      name: expense
+
+  - name: Create application directory /app
     ansible.builtin.file:
-      path: /usr/share/nginx/html
+      path: /app
       state: directory
+      owner: expense
+      group: expense
 
-  - name: download the frontend code
+  - name: Download backend code
     ansible.builtin.get_url:
-      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
-      dest: /tmp/frontend.zip
+      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+      dest: /tmp/backend.zip
 
-  - name: extract the code
+  - name: Extract the backend code
     ansible.builtin.unarchive:
-      src: /tmp/frontend.zip #by default ansible thinks this is in ansible server
-      dest: /usr/share/nginx/html
+      src: /tmp/backend.zip
+      dest: /app
       remote_src: yes
+      owner: expense
+      group: expense
 
-  - name: copy expense conf
+  - name: Install backend dependencies
+    ansible.builtin.npm:
+      path: /app
+      production: true
+
+  - name: Copy backend service file to systemd
     ansible.builtin.copy:
-      src: expense.conf
-      dest: /etc/nginx/default.d/expense.conf
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
 
-  - name: restart nginx
-    ansible.builtin.service:
-      name: nginx
+  - name: Install PyMySQL and cryptography for Python 3.9
+    ansible.builtin.pip:
+      name:
+        - PyMySQL
+        - cryptography
+      executable: pip3.9
+
+  - name: Import MySQL database schema
+    community.mysql.mysql_db:
+      login_user: root
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_host }}"
+      target: /app/schema/backend.sql
+      state: import
+
+  - name: Reload systemd and restart backend service
+    ansible.builtin.systemd:
+      daemon_reload: true
+      name: backend
       state: restarted
+      enabled: yes
