@@ -10,7 +10,7 @@
   become: yes
   vars:
     mysql_password: "ExpenseApp@1"
-    mysql_host: "mysql.vijaydevops.store"
+    mysql_host: "mysql.harikagade.store"
   tasks:
   - name: install python lib PyMySQL
     ansible.builtin.pip:
