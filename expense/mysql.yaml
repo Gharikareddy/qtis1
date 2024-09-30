@@ -9,7 +9,7 @@
   hosts: mysql
   become: yes
   vars:
-    mysql_password: "ExpenseApp@1"
+    mysql_password: ExpenseApp@1
     mysql_host: "mysql.harikagade.store"
   tasks:
   - name: install python lib PyMySQL
@@ -21,7 +21,7 @@
       name: mysql-server
       state: present
 
-  - name: start mysql server
+  - name: start mysql server #ExpenseApp@1
     ansible.builtin.service:
       name: mysqld
       state: started
