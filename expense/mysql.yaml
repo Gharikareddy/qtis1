@@ -9,6 +9,10 @@
     ansible.builtin.package:
       name: mysql-server
       state: present
+  - name: install python lib PyMySQL
+    ansible.builtin.pip:
+      name:
+      - PyMySQL
 
   - name: start mysql server
     ansible.builtin.service:
