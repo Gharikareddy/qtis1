@@ -64,3 +64,6 @@
       login_password: "{{ mysql_password }}"
       state: present
     when: mysql_info.failed == true
+  - name: update my sql root password if it not set
+    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{mysql_password}}"
+    when: mysql_info.failed == true
