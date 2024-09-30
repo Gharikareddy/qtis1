@@ -1,6 +1,9 @@
 - name: mysql configuration
   hosts: mysql
   become: yes
+  vars:
+    mysql_password: "ExpenseApp@1"
+    mysql_host: "mysql.harikagade.store"
   tasks:
   - name: install MySQL Server
     ansible.builtin.package:
