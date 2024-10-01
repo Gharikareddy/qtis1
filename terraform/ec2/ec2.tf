@@ -23,3 +23,16 @@
             Name = "allow_sshh"
         }
     }
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Replace with the appropriate AMI ID
+  instance_type = "t3.micro"
+
+  # Attach the security group to the instance
+  vpc_security_group_ids = [aws_security_group.allow_ssh_terraform.id]
+
+  tags = {
+    Name = "MyEC2Instance"
+  }
+
+  # Add any other necessary configurations such as key_name, subnet_id, etc.
+}
