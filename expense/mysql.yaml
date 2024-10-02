@@ -1,8 +1,3 @@
-#T1: install mysql server
-#T2: start the mysql service
-#T3: Check if root user is created or not
-#T4: Install dependencies
-#T5: if password for root is not set , create password for root.
 - name: mysql configuration
   hosts: mysql
   become: yes
@@ -10,15 +5,14 @@
     mysql_password: ExpenseApp@1
     mysql_host: "mysql.harikagade.store"
   tasks:
+
   - name: install python lib PyMySQL
     ansible.builtin.pip:
-      name:
-      - PyMySQL
+      name: PyMySQL
 
   - name: install cryptography package
     ansible.builtin.pip:
-      name:
-      - cryptography
+      name: cryptography
 
   - name: install MySQL Server
     ansible.builtin.package:
@@ -31,19 +25,19 @@
       state: started
       enabled: yes
 
-  - name: Connecting to mysql server  
+  - name: Check if MySQL root user can connect
     community.mysql.mysql_info:
       login_user: root
-      login_password: "{{mysql_password}}"
-      login_host: "{{mysql_host}}"
-    ignore_errors: true  
+      login_password: "{{ mysql_password }}"
+      login_host: "{{ mysql_host }}"
+    ignore_errors: true
     register: mysql_info
 
   - name: print the mysql_info
     ansible.builtin.debug:
-      msg: "{{mysql_info}}"
+      msg: "{{ mysql_info }}"
 
-  - name: Ensure MySQL user uses mysql_native_password
+  - name: Ensure MySQL root user uses mysql_native_password
     community.mysql.mysql_user:
       name: root
       host: "{{ mysql_host }}"
@@ -51,7 +45,7 @@
       priv: "*.*:ALL,GRANT"
       login_user: root
       login_password: "{{ mysql_password }}"
-      auth_plugin: mysql_native_password
+      plugin: mysql_native_password
       state: present
     when: mysql_info.failed == true
 
@@ -64,6 +58,8 @@
       login_password: "{{ mysql_password }}"
       state: present
     when: mysql_info.failed == true
-  - name: update my sql root password if it not set
-    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{mysql_password}}"
+
+  - name: Run mysql_secure_installation commands
+    ansible.builtin.command: >
+      mysql -uroot -p{{ mysql_password }} -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '{{ mysql_password }}';"
     when: mysql_info.failed == true
